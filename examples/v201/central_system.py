@@ -67,8 +67,8 @@ async def on_connect(websocket, path):
     charge_point = ChargePoint(charge_point_id, websocket)
     try:
         await charge_point.start()
-    except Exception as e:
-        logging.exception(e)
+    except Exception:
+        logging.exception('Error from '+charge_point_id)
 
 
 async def main():
