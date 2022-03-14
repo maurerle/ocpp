@@ -129,11 +129,13 @@ class ChargePoint:
                 asyncio.create_task(self._read_connection()),
                 asyncio.create_task(self._stop.wait()),
             ]
-            _, pending = asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
-
+            _, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
             for task in pending:
                 task.cancel()
-                await task
+                try:
+                    await task
+                except asyncio.exceptions.CancelledError:
+                    pass
 
     def stop(self):
         """ Stop `start()`. """
